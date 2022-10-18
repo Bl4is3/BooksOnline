@@ -23,7 +23,18 @@ def get_datas_for_one_product(product, category):
     else:
         product_description = ''
     image_url = soup.img['src'].replace('../../', URL_SITE)
-    review_rating = elements[6]
+    el = soup.select("div.product_main > p")
+    if 'One' in str(el):
+        review_rating = "1/5 stars"
+    elif 'Two' in str(el):
+        review_rating = "2/5 stars"
+    elif 'Three' in str(el):
+        review_rating = "3/5 stars"
+    elif 'Four' in str(el):
+        review_rating = "4/5 stars"
+    elif 'Five' in str(el):
+        review_rating = "5/5 stars"
+
     file = category + ".csv"
     with open(file, "a") as csv_file:
         writer = csv.writer(csv_file, delimiter=",")
