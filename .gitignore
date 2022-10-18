@@ -2,3 +2,4 @@ env/
 data/
 booktoscrap_cdc.odt
 *.csv
+.gitignore
