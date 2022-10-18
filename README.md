@@ -1,7 +1,8 @@
-# Application BootToScrape
+# Application BooksToScrape
 
 Pour utiliser cette application, merci d'utiliser un environnement virtuel.
-Pour ce faire, placez vous dans le répertoire dédié puis tapez les commandes suivantes:
+
+Pour ce faire, placez-vous dans le répertoire dédié puis tapez les commandes suivantes:
 ```
 python3 -m venv env
 source env/bin/activate
