@@ -1,6 +1,6 @@
 # Application BooksToScrape
 
-Procédure d'utilisation
+### Procédure d'utilisation:
 
 Créer un répertoire dédié et placez-vous dedans:
 
