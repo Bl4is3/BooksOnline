@@ -9,8 +9,12 @@ source env/bin/activate
 
 Ensuite chargez les modules nécessaires grace à la commande:
 
-```pip install -r requirements.txt```
+```
+pip install -r requirements.txt
+```
 
 Enfin lancez l'application de la manière suivante:
 
-```python3 books.py```
+```
+python3 books.py
+```
