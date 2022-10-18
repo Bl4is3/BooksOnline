@@ -4,8 +4,7 @@ from bs4 import BeautifulSoup
 
 
 def get_datas_for_one_product(product, category):
-    product_page_url = url_site + "catalogue/" + product
-    print(product_page_url)
+    product_page_url = URL_SITE + "catalogue/" + product
     page = requests.get(product_page_url)
     soup = BeautifulSoup(page.content, 'html.parser')
     elements = []
@@ -14,25 +13,17 @@ def get_datas_for_one_product(product, category):
         elements.append(table.td.string.replace('<td>', ''))
 
     upc = elements[0]
-    print("UPC :", upc)
     title = soup.find("div", class_="product_main").h1.string
-    print("Titre :", title)
     price_excluding_tax = elements[2]
-    print("Price.HT :", price_excluding_tax)
     price_including_tax = elements[3]
-    print("Price.TTC :", price_including_tax)
     number_available = elements[5].replace('In stock (', '').replace('available)', '')
-    print("Available : ", number_available)
     para = soup.find(id="product_description")
     if para:
         product_description = str(para.find_next_siblings('p')).replace('[<p>', '').replace('</p>]', '')
     else:
         product_description = ''
-    print("Description :", product_description)
-    image_url = soup.img['src'].replace('../../', url_site)
-    print("lien_image :", image_url)
+    image_url = soup.img['src'].replace('../../', URL_SITE)
     review_rating = elements[6]
-    print("Reviews :", review_rating)
     file = category + ".csv"
     with open(file, "a") as csv_file:
         writer = csv.writer(csv_file, delimiter=",")
@@ -41,7 +32,7 @@ def get_datas_for_one_product(product, category):
 
 
 def get_all_products_for_one_category(category):
-    url_category = url_site + "catalogue/category/books/" + category
+    url_category = URL_SITE + "catalogue/category/books/" + category
     n = 1
     list_products = []
     while n != 0:
@@ -92,6 +83,6 @@ def get_all_datas(url):
             get_datas_for_one_product(product, category)
 
 
-url_site = "http://books.toscrape.com/"
+URL_SITE = "http://books.toscrape.com/"
 
-get_all_datas(url_site)
+get_all_datas(URL_SITE)
