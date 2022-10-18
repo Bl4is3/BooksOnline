@@ -1,20 +1,28 @@
 # Application BooksToScrape
 
-Pour utiliser cette application, merci d'utiliser un environnement virtuel.
+Procédure d'utilisation
 
-Pour ce faire, placez-vous dans le répertoire dédié puis tapez les commandes suivantes:
+Créer un répertoire dédié et placez-vous dedans:
+
+```
+mkdir bookstocrape
+cd /bookstoscrape
+```
+
+Créer l'envirronment virtuel et activez le:
+
 ```
 python3 -m venv env
 source env/bin/activate
 ```
 
-Ensuite chargez les modules nécessaires grace à la commande:
+Ensuite chargez les modules nécessaires :
 
 ```
 pip install -r requirements.txt
 ```
 
-Enfin lancez l'application de la manière suivante:
+Enfin lancez l'application:
 
 ```
 python3 books.py
