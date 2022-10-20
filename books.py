@@ -1,6 +1,9 @@
 import requests
-import csv
 from bs4 import BeautifulSoup
+import pandas as pd
+import os
+import urllib.request
+import shutil
 
 
 def get_datas_for_one_product(product, category):
@@ -23,6 +26,9 @@ def get_datas_for_one_product(product, category):
     else:
         product_description = ''
     image_url = soup.img['src'].replace('../../', URL_SITE)
+    product_name = soup.find("div", class_="product_main").h1.string
+    name_img = "data/img/" + category + "/" + product_name.replace('/', '_') + ".jpg"
+    urllib.request.urlretrieve(image_url, name_img)
     el = soup.select("div.product_main > p")
     if 'One' in str(el):
         review_rating = "1/5 stars"
@@ -34,12 +40,23 @@ def get_datas_for_one_product(product, category):
         review_rating = "4/5 stars"
     elif 'Five' in str(el):
         review_rating = "5/5 stars"
-
-    file = category + ".csv"
-    with open(file, "a") as csv_file:
-        writer = csv.writer(csv_file, delimiter=",")
-        writer.writerow([product_page_url, upc, title, price_including_tax, price_excluding_tax, number_available,
-                         product_description, category, review_rating, image_url])
+    else:
+        review_rating = ""
+    file = "data/csv/" + category + ".csv"
+    data_product = {
+        "product_page_url": [product_page_url],
+        "universal_product_code": [upc],
+        "title": [title],
+        "price_including_tax": [price_including_tax],
+        "price_excluding_tax": [price_excluding_tax],
+        "number_available": [number_available],
+        "product_description": [product_description],
+        "category": [category],
+        "review_rating": [review_rating],
+        "image_url": [image_url]
+    }
+    data_product_df = pd.DataFrame(data_product)
+    data_product_df.to_csv(file, mode='a', index=False, header=False)
 
 
 def get_all_products_for_one_category(category):
@@ -76,13 +93,14 @@ def get_all_categories(url):
     for category in cats:
         cat = str(category.a["href"].replace('catalogue/category/books/', '').replace("/index.html", ""))
         categories.append(cat)
-        en_tete = ["product_page_url", "universal_product_code", "title", "price_including_tax",
-                   "price_excluding_tax", "number_available", "product_description", "category",
-                   "review_rating", "image_url"]
-        file = cat + ".csv"
-        with open(file, "w") as csv_file:
-            writer = csv.writer(csv_file, delimiter=",")
-            writer.writerow(en_tete)
+        if not os.path.exists('data/img/' + cat):
+            os.mkdir('data/img/' + cat)
+        en_tete = {"product_page_url": [], "universal_product_code": [], "title": [], "price_including_tax": [],
+                   "price_excluding_tax": [], "number_available": [], "product_description": [], "category": [],
+                   "review_rating": [], "image_url": []}
+        file = "data/csv/" + cat + ".csv"
+        en_tete_df = pd.DataFrame(en_tete)
+        en_tete_df.to_csv(file, index=False, sep=",")
     return categories
 
 
@@ -94,6 +112,27 @@ def get_all_datas(url):
             get_datas_for_one_product(product, category)
 
 
+def organisation():
+    if not os.path.exists('data'):
+        os.mkdir('data')
+    if not os.path.exists('data/csv'):
+        os.mkdir('data/csv')
+    if not os.path.exists('data/img'):
+        os.mkdir('data/img')
+
+
 URL_SITE = "http://books.toscrape.com/"
 
-get_all_datas(URL_SITE)
+
+def zip_datas():
+    filename = "datas_zip"
+    extension = "zip"
+    directory = "data"
+    if not os.path.exists(filename):
+        shutil.make_archive(filename, extension, directory)
+
+
+def main():
+    organisation()
+    get_all_datas(URL_SITE)
+    zip_datas()
