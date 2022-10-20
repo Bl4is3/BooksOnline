@@ -9,7 +9,7 @@ mkdir bookstocrape
 cd /bookstoscrape
 ```
 
-Créer l'envirronment virtuel et activez le:
+Créer l'environnement virtuel et activez le:
 
 ```
 python3 -m venv env
@@ -25,5 +25,5 @@ pip install -r requirements.txt
 Enfin lancez l'application:
 
 ```
-python3 books.py
+python3 main.py
 ```
