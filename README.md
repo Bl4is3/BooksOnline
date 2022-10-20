@@ -2,27 +2,27 @@
 
 ### Procédure d'utilisation:
 
-Créer un répertoire dédié et placez-vous dedans:
+Créez un répertoire dédié et placez-vous dedans:
 
 ```
 mkdir bookstocrape
 cd /bookstoscrape
 ```
 
-Créer l'environnement virtuel et activez le:
+Créez l'environnement virtuel et activez le:
 
 ```
 python3 -m venv env
 source env/bin/activate
 ```
 
-Ensuite chargez les modules nécessaires :
+Chargez les modules nécessaires :
 
 ```
 pip install -r requirements.txt
 ```
 
-Enfin lancez l'application:
+Lancez l'application:
 
 ```
 python3 main.py
