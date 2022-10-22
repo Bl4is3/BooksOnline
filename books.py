@@ -5,13 +5,14 @@ import os
 import urllib.request
 import shutil
 
+
 URL_SITE = "http://books.toscrape.com/"
 
 
 class BookToScrape:
 
-    @classmethod
-    def get_datas_for_one_product(cls, product, category):
+
+    def get_datas_for_one_product(self, product, category):
         product_page_url = URL_SITE + "catalogue/" + product
         page = requests.get(product_page_url)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -35,6 +36,7 @@ class BookToScrape:
         name_img = "data/img/" + category + "/" + product_name.replace('/', '_') + ".jpg"
         urllib.request.urlretrieve(image_url, name_img)
         el = soup.select("div.product_main > p")
+        review_rating = ""
         if 'One' in str(el):
             review_rating = "1/5 stars"
         elif 'Two' in str(el):
@@ -45,8 +47,6 @@ class BookToScrape:
             review_rating = "4/5 stars"
         elif 'Five' in str(el):
             review_rating = "5/5 stars"
-        else:
-            review_rating = ""
         file = "data/csv/" + category + ".csv"
         data_product = {
             "product_page_url": [product_page_url],
@@ -63,8 +63,7 @@ class BookToScrape:
         data_product_df = pd.DataFrame(data_product)
         data_product_df.to_csv(file, mode='a', index=False, header=False)
 
-    @classmethod
-    def get_all_products_for_one_category(cls, category):
+    def get_all_products_for_one_category(self, category):
         url_category = URL_SITE + "catalogue/category/books/" + category
         n = 1
         list_products = []
@@ -87,8 +86,7 @@ class BookToScrape:
                 n = 0
         return list_products
 
-    @classmethod
-    def get_all_categories(cls, url):
+    def get_all_categories(self, url):
         page = requests.get(url)
         soup = BeautifulSoup(page.content, 'html.parser')
         cats = soup.select("ul.nav-list > li > ul > li")
@@ -113,13 +111,12 @@ class BookToScrape:
             en_tete_df.to_csv(file, index=False, sep=",")
         return categories
 
-    @classmethod
-    def get_all_datas(cls, url):
-        categories = BookToScrape.get_all_categories(url)
+    def get_all_datas(self, url):
+        categories = self.get_all_categories(url)
         for category in categories:
-            products = BookToScrape.get_all_products_for_one_category(category)
+            products = self.get_all_products_for_one_category(category)
             for product in products:
-                BookToScrape.get_datas_for_one_product(product, category)
+                self.get_datas_for_one_product(product, category)
 
     def organisation(self):
         if not os.path.exists('data'):
@@ -130,15 +127,8 @@ class BookToScrape:
             os.mkdir('data/img')
 
     def zip_datas(self):
-        filename = "datas_zip"
+        filename = "ROGEL_Blaise_2_data_images_102022"
         extension = "zip"
         directory = "data"
         if not os.path.exists(filename):
             shutil.make_archive(filename, extension, directory)
-
-
-def main():
-    bk = BookToScrape()
-    bk.organisation()
-    bk.get_all_datas(URL_SITE)
-    bk.zip_datas()

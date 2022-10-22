@@ -1,4 +1,8 @@
-from books import main
+from books import BookToScrape, URL_SITE
 
-main()
+
+bk = BookToScrape()
+bk.organisation()
+bk.get_all_datas(URL_SITE)
+bk.zip_datas()
 
